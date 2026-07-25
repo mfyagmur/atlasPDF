@@ -13,4 +13,5 @@ async def download_file(file_id: str) -> FileResponse:
         raise HTTPException(status_code=404, detail="Dosya bulunamadı veya süresi doldu.")
 
     path = matches[0]
-    return FileResponse(path, media_type="application/pdf", filename=f"atlaspdf{path.suffix}")
+    media_type = "application/zip" if path.suffix == ".zip" else "application/pdf"
+    return FileResponse(path, media_type=media_type, filename=f"atlaspdf{path.suffix}")

@@ -7,6 +7,7 @@ from app.api.download import router as download_router
 from app.core.config import settings
 from app.storage.cleanup import start_cleanup_scheduler
 from app.tools.merge.router import router as merge_router
+from app.tools.split.router import router as split_router
 
 
 @asynccontextmanager
@@ -29,6 +30,7 @@ app.add_middleware(
 )
 
 app.include_router(merge_router)
+app.include_router(split_router)
 app.include_router(download_router)
 
 
