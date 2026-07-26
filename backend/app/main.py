@@ -8,6 +8,7 @@ from app.core.config import settings
 from app.storage.cleanup import start_cleanup_scheduler
 from app.tools.compress.router import router as compress_router
 from app.tools.merge.router import router as merge_router
+from app.tools.pdf_to_word.router import router as pdf_to_word_router
 from app.tools.split.router import router as split_router
 
 
@@ -33,6 +34,7 @@ app.add_middleware(
 app.include_router(merge_router)
 app.include_router(split_router)
 app.include_router(compress_router)
+app.include_router(pdf_to_word_router)
 app.include_router(download_router)
 
 

@@ -5,4 +5,5 @@ export default [
   route("araclar/birlestir", "routes/araclar.birlestir.tsx"),
   route("araclar/bol", "routes/araclar.bol.tsx"),
   route("araclar/sikistir", "routes/araclar.sikistir.tsx"),
+  route("araclar/word-cevir", "routes/araclar.word-cevir.tsx"),
 ] satisfies RouteConfig;
