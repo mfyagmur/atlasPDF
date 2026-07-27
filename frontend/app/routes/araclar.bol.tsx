@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
+import { DownloadCard } from "../components/shared/DownloadCard";
+import { ErrorBanner } from "../components/shared/ErrorBanner";
 import { FileUploader } from "../components/shared/FileUploader";
 import { ProgressIndicator } from "../components/shared/ProgressIndicator";
 import type { Route } from "./+types/araclar.bol";
@@ -149,16 +151,10 @@ export default function SplitPdfPage() {
 
           {status === "uploading" && <ProgressIndicator label="Bölünüyor..." />}
 
-          {status === "error" && errorMessage && (
-            <p className="text-sm text-destructive">{errorMessage}</p>
-          )}
+          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
 
           {status === "success" && downloadUrl && (
-            <a href={downloadUrl} download>
-              <Button type="button" variant="secondary" className="w-full">
-                Bölünmüş Dosyaları İndir (ZIP)
-              </Button>
-            </a>
+            <DownloadCard downloadUrl={downloadUrl} label="Bölünmüş Dosyaları İndir (ZIP)" />
           )}
 
           <Button type="button" onClick={handleSplit} disabled={!canSplit}>

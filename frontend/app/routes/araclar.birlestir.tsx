@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { DownloadCard } from "../components/shared/DownloadCard";
+import { ErrorBanner } from "../components/shared/ErrorBanner";
 import { FileUploader } from "../components/shared/FileUploader";
 import { ProgressIndicator } from "../components/shared/ProgressIndicator";
 import type { Route } from "./+types/araclar.birlestir";
@@ -78,16 +80,10 @@ export default function MergePdfPage() {
 
           {status === "uploading" && <ProgressIndicator label="Birleştiriliyor..." />}
 
-          {status === "error" && errorMessage && (
-            <p className="text-sm text-destructive">{errorMessage}</p>
-          )}
+          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
 
           {status === "success" && downloadUrl && (
-            <a href={downloadUrl} download>
-              <Button type="button" variant="secondary" className="w-full">
-                Birleştirilmiş PDF'i İndir
-              </Button>
-            </a>
+            <DownloadCard downloadUrl={downloadUrl} label="Birleştirilmiş PDF'i İndir" />
           )}
 
           <Button type="button" onClick={handleMerge} disabled={!canMerge}>

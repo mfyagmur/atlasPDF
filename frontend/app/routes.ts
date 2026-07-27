@@ -1,10 +1,12 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import { type RouteConfig, index, layout, route } from "@react-router/dev/routes";
 
 export default [
-  index("routes/home.tsx"),
-  route("araclar/birlestir", "routes/araclar.birlestir.tsx"),
-  route("araclar/bol", "routes/araclar.bol.tsx"),
-  route("araclar/sikistir", "routes/araclar.sikistir.tsx"),
-  route("araclar/word-cevir", "routes/araclar.word-cevir.tsx"),
-  route("araclar/pdf-excel", "routes/araclar.pdf-excel.tsx"),
+  layout("components/layout/AppLayout.tsx", [
+    index("routes/home.tsx"),
+    route("araclar/birlestir", "routes/araclar.birlestir.tsx"),
+    route("araclar/bol", "routes/araclar.bol.tsx"),
+    route("araclar/sikistir", "routes/araclar.sikistir.tsx"),
+    route("araclar/word-cevir", "routes/araclar.word-cevir.tsx"),
+    route("araclar/pdf-excel", "routes/araclar.pdf-excel.tsx"),
+  ]),
 ] satisfies RouteConfig;

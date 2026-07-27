@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { DownloadCard } from "../components/shared/DownloadCard";
+import { ErrorBanner } from "../components/shared/ErrorBanner";
 import { FileUploader } from "../components/shared/FileUploader";
 import { ProgressIndicator } from "../components/shared/ProgressIndicator";
 import type { Route } from "./+types/araclar.word-cevir";
@@ -112,24 +114,12 @@ export default function PdfToWordPage() {
 
           {status === "uploading" && <ProgressIndicator label="Dönüştürülüyor..." />}
 
-          {status === "error" && errorMessage && (
-            <p className="text-sm text-destructive">{errorMessage}</p>
-          )}
+          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
 
-          {status === "success" && warning && (
-            <div className="rounded-lg border border-amber-400 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200">
-              {warning}
-            </div>
-          )}
+          {status === "success" && warning && <ErrorBanner variant="warning" message={warning} />}
 
           {status === "success" && downloadUrl && (
-            <div className="flex flex-col gap-3 rounded-lg border p-4">
-              <a href={downloadUrl} download>
-                <Button type="button" variant="secondary" className="w-full">
-                  Word Dosyasını İndir
-                </Button>
-              </a>
-            </div>
+            <DownloadCard downloadUrl={downloadUrl} label="Word Dosyasını İndir" />
           )}
 
           <Button type="button" onClick={handleConvert} disabled={!canConvert}>

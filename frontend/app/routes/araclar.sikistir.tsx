@@ -3,6 +3,8 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Label } from "../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
+import { DownloadCard } from "../components/shared/DownloadCard";
+import { ErrorBanner } from "../components/shared/ErrorBanner";
 import { FileUploader } from "../components/shared/FileUploader";
 import { ProgressIndicator } from "../components/shared/ProgressIndicator";
 import type { Route } from "./+types/araclar.sikistir";
@@ -126,26 +128,23 @@ export default function CompressPdfPage() {
 
           {status === "uploading" && <ProgressIndicator label="Sıkıştırılıyor..." />}
 
-          {status === "error" && errorMessage && (
-            <p className="text-sm text-destructive">{errorMessage}</p>
-          )}
+          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
 
           {status === "success" &&
             downloadUrl &&
             originalSize !== null &&
             compressedSize !== null &&
             savingsPercent !== null && (
-              <div className="flex flex-col gap-3 rounded-lg border p-4">
-                <p className="text-sm">
-                  {formatMB(originalSize)} → {formatMB(compressedSize)}{" "}
-                  <span className="font-semibold">(%{savingsPercent} küçültme)</span>
-                </p>
-                <a href={downloadUrl} download>
-                  <Button type="button" variant="secondary" className="w-full">
-                    Sıkıştırılmış PDF'i İndir
-                  </Button>
-                </a>
-              </div>
+              <DownloadCard
+                downloadUrl={downloadUrl}
+                label="Sıkıştırılmış PDF'i İndir"
+                stats={
+                  <p className="text-sm">
+                    {formatMB(originalSize)} → {formatMB(compressedSize)}{" "}
+                    <span className="font-semibold">(%{savingsPercent} küçültme)</span>
+                  </p>
+                }
+              />
             )}
 
           <Button type="button" onClick={handleCompress} disabled={!canCompress}>

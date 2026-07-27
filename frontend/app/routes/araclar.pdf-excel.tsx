@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { DownloadCard } from "../components/shared/DownloadCard";
+import { ErrorBanner } from "../components/shared/ErrorBanner";
 import { FileUploader } from "../components/shared/FileUploader";
 import { ProgressIndicator } from "../components/shared/ProgressIndicator";
 import type { Route } from "./+types/araclar.pdf-excel";
@@ -88,34 +90,20 @@ export default function PdfToExcelPage() {
 
           {status === "uploading" && <ProgressIndicator label="Dönüştürülüyor..." />}
 
-          {status === "error" && errorMessage && (
-            <p className="text-sm text-destructive">{errorMessage}</p>
-          )}
+          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
 
-          {status === "success" && tablesFound !== null && (
-            <div className="rounded-lg border p-4">
-              <p className="text-sm">
-                {tablesFound > 0
-                  ? `${tablesFound} tablo bulundu.`
-                  : "Tablo bulunamadı."}
-              </p>
-            </div>
-          )}
+          {status === "success" && warning && <ErrorBanner variant="warning" message={warning} />}
 
-          {status === "success" && warning && (
-            <div className="rounded-lg border border-amber-400 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200">
-              {warning}
-            </div>
-          )}
-
-          {status === "success" && downloadUrl && (
-            <div className="flex flex-col gap-3 rounded-lg border p-4">
-              <a href={downloadUrl} download>
-                <Button type="button" variant="secondary" className="w-full">
-                  Excel Dosyasını İndir
-                </Button>
-              </a>
-            </div>
+          {status === "success" && downloadUrl && tablesFound !== null && (
+            <DownloadCard
+              downloadUrl={downloadUrl}
+              label="Excel Dosyasını İndir"
+              stats={
+                <p className="text-sm">
+                  {tablesFound > 0 ? `${tablesFound} tablo bulundu.` : "Tablo bulunamadı."}
+                </p>
+              }
+            />
           )}
 
           <Button type="button" onClick={handleConvert} disabled={!canConvert}>
