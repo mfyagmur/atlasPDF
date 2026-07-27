@@ -6,4 +6,5 @@ export default [
   route("araclar/bol", "routes/araclar.bol.tsx"),
   route("araclar/sikistir", "routes/araclar.sikistir.tsx"),
   route("araclar/word-cevir", "routes/araclar.word-cevir.tsx"),
+  route("araclar/pdf-excel", "routes/araclar.pdf-excel.tsx"),
 ] satisfies RouteConfig;
