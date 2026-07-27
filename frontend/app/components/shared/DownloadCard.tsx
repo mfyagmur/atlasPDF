@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { motion } from "motion/react";
 import { Button } from "../ui/button";
 
 type DownloadCardProps = {
@@ -17,13 +18,21 @@ export function DownloadCard({ downloadUrl, label, stats }: DownloadCardProps) {
   );
 
   if (!stats) {
-    return button;
+    return (
+      <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}>
+        {button}
+      </motion.div>
+    );
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border p-4">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="flex flex-col gap-3 rounded-lg border p-4"
+    >
       {stats}
       {button}
-    </div>
+    </motion.div>
   );
 }

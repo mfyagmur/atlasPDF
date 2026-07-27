@@ -1,6 +1,9 @@
 import { Link } from "react-router";
+import { motion } from "motion/react";
 import { Combine, FileSpreadsheet, FileText, Minimize2, Scissors } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { HowItWorks } from "../components/home/HowItWorks";
+import { WhyUs } from "../components/home/WhyUs";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -43,6 +46,18 @@ const TOOLS = [
   },
 ];
 
+const gridVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const MotionLink = motion.create(Link);
+
 export default function Home() {
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-8 p-8">
@@ -53,10 +68,21 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        variants={gridVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {TOOLS.map((tool) => (
-          <Link key={tool.slug} to={`/${tool.slug}`}>
-            <Card className="h-full transition-colors hover:bg-accent">
+          <MotionLink
+            key={tool.slug}
+            to={`/${tool.slug}`}
+            variants={cardVariants}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Card className="h-full transition-colors hover:bg-accent hover:shadow-md">
               <CardHeader>
                 <tool.icon className="size-6" />
                 <CardTitle>{tool.title}</CardTitle>
@@ -65,9 +91,12 @@ export default function Home() {
                 <p className="text-sm text-muted-foreground">{tool.description}</p>
               </CardContent>
             </Card>
-          </Link>
+          </MotionLink>
         ))}
-      </div>
+      </motion.div>
+
+      <HowItWorks />
+      <WhyUs />
     </main>
   );
 }

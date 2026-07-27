@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { DownloadCard } from "../components/shared/DownloadCard";
@@ -90,21 +91,28 @@ export default function PdfToExcelPage() {
 
           {status === "uploading" && <ProgressIndicator label="Dönüştürülüyor..." />}
 
-          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
+          <AnimatePresence>
+            {status === "error" && errorMessage && (
+              <ErrorBanner key="error" message={errorMessage} />
+            )}
 
-          {status === "success" && warning && <ErrorBanner variant="warning" message={warning} />}
+            {status === "success" && warning && (
+              <ErrorBanner key="warning" variant="warning" message={warning} />
+            )}
 
-          {status === "success" && downloadUrl && tablesFound !== null && (
-            <DownloadCard
-              downloadUrl={downloadUrl}
-              label="Excel Dosyasını İndir"
-              stats={
-                <p className="text-sm">
-                  {tablesFound > 0 ? `${tablesFound} tablo bulundu.` : "Tablo bulunamadı."}
-                </p>
-              }
-            />
-          )}
+            {status === "success" && downloadUrl && tablesFound !== null && (
+              <DownloadCard
+                key="download"
+                downloadUrl={downloadUrl}
+                label="Excel Dosyasını İndir"
+                stats={
+                  <p className="text-sm">
+                    {tablesFound > 0 ? `${tablesFound} tablo bulundu.` : "Tablo bulunamadı."}
+                  </p>
+                }
+              />
+            )}
+          </AnimatePresence>
 
           <Button type="button" onClick={handleConvert} disabled={!canConvert}>
             Excel'e Çevir

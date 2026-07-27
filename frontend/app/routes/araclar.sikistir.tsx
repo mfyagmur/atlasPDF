@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Label } from "../components/ui/label";
@@ -128,24 +129,29 @@ export default function CompressPdfPage() {
 
           {status === "uploading" && <ProgressIndicator label="Sıkıştırılıyor..." />}
 
-          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
-
-          {status === "success" &&
-            downloadUrl &&
-            originalSize !== null &&
-            compressedSize !== null &&
-            savingsPercent !== null && (
-              <DownloadCard
-                downloadUrl={downloadUrl}
-                label="Sıkıştırılmış PDF'i İndir"
-                stats={
-                  <p className="text-sm">
-                    {formatMB(originalSize)} → {formatMB(compressedSize)}{" "}
-                    <span className="font-semibold">(%{savingsPercent} küçültme)</span>
-                  </p>
-                }
-              />
+          <AnimatePresence>
+            {status === "error" && errorMessage && (
+              <ErrorBanner key="error" message={errorMessage} />
             )}
+
+            {status === "success" &&
+              downloadUrl &&
+              originalSize !== null &&
+              compressedSize !== null &&
+              savingsPercent !== null && (
+                <DownloadCard
+                  key="download"
+                  downloadUrl={downloadUrl}
+                  label="Sıkıştırılmış PDF'i İndir"
+                  stats={
+                    <p className="text-sm">
+                      {formatMB(originalSize)} → {formatMB(compressedSize)}{" "}
+                      <span className="font-semibold">(%{savingsPercent} küçültme)</span>
+                    </p>
+                  }
+                />
+              )}
+          </AnimatePresence>
 
           <Button type="button" onClick={handleCompress} disabled={!canCompress}>
             Sıkıştır

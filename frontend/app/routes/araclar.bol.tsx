@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -151,11 +152,15 @@ export default function SplitPdfPage() {
 
           {status === "uploading" && <ProgressIndicator label="Bölünüyor..." />}
 
-          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
+          <AnimatePresence>
+            {status === "error" && errorMessage && (
+              <ErrorBanner key="error" message={errorMessage} />
+            )}
 
-          {status === "success" && downloadUrl && (
-            <DownloadCard downloadUrl={downloadUrl} label="Bölünmüş Dosyaları İndir (ZIP)" />
-          )}
+            {status === "success" && downloadUrl && (
+              <DownloadCard key="download" downloadUrl={downloadUrl} label="Bölünmüş Dosyaları İndir (ZIP)" />
+            )}
+          </AnimatePresence>
 
           <Button type="button" onClick={handleSplit} disabled={!canSplit}>
             Böl

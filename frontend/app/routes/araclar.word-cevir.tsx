@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { DownloadCard } from "../components/shared/DownloadCard";
@@ -114,13 +115,19 @@ export default function PdfToWordPage() {
 
           {status === "uploading" && <ProgressIndicator label="Dönüştürülüyor..." />}
 
-          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
+          <AnimatePresence>
+            {status === "error" && errorMessage && (
+              <ErrorBanner key="error" message={errorMessage} />
+            )}
 
-          {status === "success" && warning && <ErrorBanner variant="warning" message={warning} />}
+            {status === "success" && warning && (
+              <ErrorBanner key="warning" variant="warning" message={warning} />
+            )}
 
-          {status === "success" && downloadUrl && (
-            <DownloadCard downloadUrl={downloadUrl} label="Word Dosyasını İndir" />
-          )}
+            {status === "success" && downloadUrl && (
+              <DownloadCard key="download" downloadUrl={downloadUrl} label="Word Dosyasını İndir" />
+            )}
+          </AnimatePresence>
 
           <Button type="button" onClick={handleConvert} disabled={!canConvert}>
             Word'e Çevir

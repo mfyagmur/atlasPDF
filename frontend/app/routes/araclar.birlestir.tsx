@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { DownloadCard } from "../components/shared/DownloadCard";
@@ -80,11 +81,15 @@ export default function MergePdfPage() {
 
           {status === "uploading" && <ProgressIndicator label="Birleştiriliyor..." />}
 
-          {status === "error" && errorMessage && <ErrorBanner message={errorMessage} />}
+          <AnimatePresence>
+            {status === "error" && errorMessage && (
+              <ErrorBanner key="error" message={errorMessage} />
+            )}
 
-          {status === "success" && downloadUrl && (
-            <DownloadCard downloadUrl={downloadUrl} label="Birleştirilmiş PDF'i İndir" />
-          )}
+            {status === "success" && downloadUrl && (
+              <DownloadCard key="download" downloadUrl={downloadUrl} label="Birleştirilmiş PDF'i İndir" />
+            )}
+          </AnimatePresence>
 
           <Button type="button" onClick={handleMerge} disabled={!canMerge}>
             Birleştir
