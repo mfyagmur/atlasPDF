@@ -1,9 +1,11 @@
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Form, HTTPException, Request, UploadFile
 
 from app.core.config import settings
+from app.core.limiter import RATE_LIMIT, limiter
+from app.core.logging import log_tool_call
 from app.storage.exceptions import FileTooLargeError, InvalidFileTypeError
 from app.storage.utils import save_upload
 from app.tools.compress.exceptions import InvalidPDFError
@@ -15,8 +17,10 @@ MAX_TOTAL_BYTES = settings.max_total_upload_mb * 1024 * 1024
 
 
 @router.post("/api/compress")
+@limiter.limit(RATE_LIMIT)
+@log_tool_call("compress")
 async def compress_endpoint(
-    file: UploadFile, level: CompressionLevel = Form("recommended")
+    request: Request, file: UploadFile, level: CompressionLevel = Form("recommended")
 ) -> dict[str, str | int | float]:
     saved_path: Path | None = None
 

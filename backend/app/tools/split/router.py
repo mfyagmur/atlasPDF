@@ -1,9 +1,11 @@
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Form, HTTPException, Request, UploadFile
 
 from app.core.config import settings
+from app.core.limiter import RATE_LIMIT, limiter
+from app.core.logging import log_tool_call
 from app.storage.exceptions import FileTooLargeError, InvalidFileTypeError
 from app.storage.utils import save_upload
 from app.tools.split.exceptions import InvalidPageRangeError, InvalidPDFError
@@ -15,7 +17,8 @@ MAX_TOTAL_BYTES = settings.max_total_upload_mb * 1024 * 1024
 
 
 @router.post("/api/pdf-info")
-async def pdf_info_endpoint(file: UploadFile) -> dict[str, int]:
+@limiter.limit(RATE_LIMIT)
+async def pdf_info_endpoint(request: Request, file: UploadFile) -> dict[str, int]:
     path: Path | None = None
     try:
         try:
@@ -37,7 +40,9 @@ async def pdf_info_endpoint(file: UploadFile) -> dict[str, int]:
 
 
 @router.post("/api/split")
-async def split_endpoint(file: UploadFile, ranges: str | None = Form(None)) -> dict[str, str]:
+@limiter.limit(RATE_LIMIT)
+@log_tool_call("split")
+async def split_endpoint(request: Request, file: UploadFile, ranges: str | None = Form(None)) -> dict[str, str]:
     saved_path: Path | None = None
 
     try:

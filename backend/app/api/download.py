@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
 
 from app.core.config import settings
+from app.core.limiter import RATE_LIMIT, limiter
 
 router = APIRouter()
 
@@ -13,7 +14,8 @@ MEDIA_TYPES = {
 
 
 @router.get("/api/download/{file_id}")
-async def download_file(file_id: str) -> FileResponse:
+@limiter.limit(RATE_LIMIT)
+async def download_file(request: Request, file_id: str) -> FileResponse:
     matches = list(settings.output_dir.glob(f"{file_id}.*"))
     if not matches:
         raise HTTPException(status_code=404, detail="Dosya bulunamadı veya süresi doldu.")

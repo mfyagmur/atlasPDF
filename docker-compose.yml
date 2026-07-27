@@ -6,8 +6,8 @@ services:
     volumes:
       - ./backend:/app
       - pdf_storage:/app/storage
-    environment:
-      - ENV=development
+    env_file:
+      - ./backend/.env
 
   frontend:
     build: ./frontend

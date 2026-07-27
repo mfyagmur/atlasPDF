@@ -1,9 +1,11 @@
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, UploadFile
+from fastapi import APIRouter, HTTPException, Request, UploadFile
 
 from app.core.config import settings
+from app.core.limiter import RATE_LIMIT, limiter
+from app.core.logging import log_tool_call
 from app.storage.exceptions import FileTooLargeError, InvalidFileTypeError
 from app.storage.utils import save_upload
 from app.tools.pdf_to_excel.exceptions import InvalidPDFError
@@ -15,7 +17,9 @@ MAX_TOTAL_BYTES = settings.max_total_upload_mb * 1024 * 1024
 
 
 @router.post("/api/pdf-to-excel")
-async def pdf_to_excel_endpoint(file: UploadFile) -> dict[str, str | int | None]:
+@limiter.limit(RATE_LIMIT)
+@log_tool_call("pdf_to_excel")
+async def pdf_to_excel_endpoint(request: Request, file: UploadFile) -> dict[str, str | int | None]:
     saved_path: Path | None = None
 
     try:
